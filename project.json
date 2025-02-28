@@ -1,0 +1,11 @@
+{
+    "k_factor": "2.2",
+    "avg_u_speed": "6.4",
+    "avg_u_height": "10",
+    "z0": "253",
+    "down_time": "6",
+    "turbine_diameter": "80",
+    "hub_height": "96",
+    "cp": "0.43",
+    "dt_efficiency": "0.865"
+}
