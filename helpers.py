@@ -17,3 +17,9 @@ def weibull_cdf(u_vector, k, c):
     return 1 - np.exp(-(u_vector/c) ** k)
 
 
+def cdf(u_vector):
+    '''
+    calculate cummulative distribution function of the u_vector and returns a vector
+    '''
+    return np.array([sum(u_vector[:x+1]) / sum(u_vector) 
+            for x in range(0, len(u_vector))])
