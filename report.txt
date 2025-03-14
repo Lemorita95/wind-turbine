@@ -4,17 +4,15 @@
 
 Average speed at hub height: 10.34 m/s
 
-Turbine rated power: 3785.99 kW
-Cut-in speed: 3 m/s, Rated speed: 15 m/s, Cut-out speed: 20 m/s
+Turbine rated power: 3864.86 kW
+Cut-in speed: 3.2 m/s, Rated speed: 15 m/s, Cut-out speed: 21 m/s
 
-One year energy production: 11420.25 MWh
+One year energy production: 12084.55 MWh
 
-Full-load hours: 3016.45 Hours
+Full-load hours: 3126.77 Hours
 
-Turbine average power: 3558.83 kW
+Turbine average power: 3632.97 kW
 
-Wind average power: 10178.76 kW
-
-Tower thickness due to gravity load: 0.65 mm
-Tower thickness due to aerodinamic load: 20.00 mm
-Tower thickness due to extreme wind load: 16.20 mm
+Tower thickness due to gravity load: 0.66 mm
+Tower thickness due to aerodinamic load: 40.83 mm
+Tower thickness due to extreme wind load: 33.08 mm
