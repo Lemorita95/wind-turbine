@@ -8,7 +8,7 @@ class Wind():
     '''
 
 
-    def __init__(self, average, height, rho=1.2, step=1):
+    def __init__(self, average, height, rho, step=1):
         '''
         initialize wind object with average with speed at a given height and air density
         '''
@@ -60,8 +60,7 @@ class Wind():
                                     for (u, t) in zip(self.speed_vector, self.hour_distribution_vector)]
         
         # energy cumulative distribution function (CDF)
-        self.energy_cdf_vector = np.array([sum(self.energy_distribution_vector[:x+1]) / sum(self.energy_distribution_vector) 
-            for x in range(0, len(self.energy_distribution_vector))])
+        self.energy_cdf_vector = cdf(self.energy_distribution_vector)
         
         # self.energy_cdf_vector = 1 - np.exp(-(self.speed_vector/self.c_weibull)**self.k)
 
@@ -79,7 +78,7 @@ class Wind():
         compute rated and cutout speed based on the energy CDF \n
         input: cutout_limit design parameters
         '''
-        self.speed_cutout = self.speed_vector[np.where(self.energy_cdf_vector > cutout_limit)[0][0]] # interception bin
+        self.speed_cutout = self.speed_vector[np.where(self.energy_cdf_vector > cutout_limit)[0][1]] # interception bin + 1
 
 
     def wind_power_distribution(self, swept_area):
@@ -94,7 +93,7 @@ class Turbine():
     class to represent the turbine object
     '''
 
-    def __init__(self, speed_vector, diameter, height, cp, global_efficiency, down_time):
+    def __init__(self, speed_vector, diameter, height, cp, global_efficiency, down_time, rho):
         ''' 
         initiate object with diameter and hight of the turbine
         '''
@@ -104,6 +103,7 @@ class Turbine():
         self.cp = cp
         self.global_efficiency = global_efficiency
         self.down_time = down_time
+        self.rho = rho
 
         self.area = np.pi * (self.diameter / 2) ** 2
 
@@ -112,12 +112,12 @@ class Turbine():
         '''
         create vector of WIND power for each velocity given its probability and turbine characteristics
         '''
-        self.power_distribution_vector = wind_power * self.cp * self.global_efficiency #* (1 - self.down_time)
+        self.power_distribution_vector = wind_power * self.cp * self.global_efficiency
 
 
-    def calculate_rated_power(self, rated_speed, rho=1.2):
+    def calculate_rated_power(self, rated_speed):
         # calculate rated power
-        self.rated_power = 0.5 * rho * self.area * (rated_speed ** 3) * self.cp * self.global_efficiency
+        self.rated_power = 0.5 * self.rho * self.area * (rated_speed ** 3) * self.cp * self.global_efficiency
 
 
     def cutin_speed(self, cutin_limit):
@@ -125,15 +125,15 @@ class Turbine():
         compute cutin speed based on the turbine power distribution \n
         input: cutin_limit design parameters
         '''
-        self.speed_cutin = self.speed_vector[np.where(self.power_distribution_vector > cutin_limit * self.rated_power)[0][0]] # interception bin
+        self.speed_cutin = (2 * cutin_limit * self.rated_power / (self.rho * self.area * self.cp * self.global_efficiency)) ** (1/3)
 
 
-    def power_curve(self, speed_cutout, speed_rated, rho=1.2):
+    def power_curve(self, speed_cutout, speed_rated):
         '''
         calculate WEC power curve with cut_in, rated_power and cut_out
         input: cut_out and rated_power 
         '''
-        self.power_curve_vector = 0.5 * rho * self.area * (self.speed_vector ** 3) * self.cp * self.global_efficiency
+        self.power_curve_vector = 0.5 * self.rho * self.area * (self.speed_vector ** 3) * self.cp * self.global_efficiency
 
         # store wind speed cutout at turbine object
         self.speed_cutout = speed_cutout
