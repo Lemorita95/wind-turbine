@@ -28,10 +28,10 @@ def plot_wind_resource(u_vector, duration_vector, energy_vector):
     ax2 = ax1.twinx()  # instantiate a second Axes that shares the same x-axis
     color = 'tab:blue'
     ax2.set_ylabel(r'Energy [kWh/$\text{m}^2$/year]', color=color, fontsize = FONT_SIZE)
-    ax2.plot(u_vector, energy_vector, color=color, label='Energy')
+    ax2.plot(u_vector, energy_vector, color=color, label='Energy', marker='o', markersize=6)
     ax2.tick_params(axis='y', labelcolor=color)
 
-    fig.legend(loc='upper right', bbox_to_anchor=(0.85, 0.85))
+    fig.legend(loc='upper right', bbox_to_anchor=(0.85, 0.85), prop={'size': FONT_SIZE})
 
     # chart formatting
     ax2.get_yaxis().set_major_formatter(
@@ -40,12 +40,51 @@ def plot_wind_resource(u_vector, duration_vector, energy_vector):
     fig.suptitle(f'Anual wind speed hours distribution and wind energy distribution', fontsize = FONT_SIZE + 2)
     ax1.set_xlabel('Wind speed [m/s]', fontsize = FONT_SIZE)
 
+    # change tick font size
+    ax1.tick_params(axis='both', which='major', labelsize=FONT_SIZE)
+    ax2.tick_params(axis='y', which='major', labelsize=FONT_SIZE)
+
     plt.grid(alpha=0.25)
     fig.tight_layout()
     
-    plt.savefig(os.path.join(figures_dir, 'wind_resource.png'))
+    plt.savefig(os.path.join(figures_dir, 'wind_resource.svg'))
     plt.show()
 
+def plot_wind_cdf(u_vector, cdf_vector, limits):
+    ''' 
+    plot wind resources cdf 
+    '''
+    rated, cut_out = limits[0], limits[1]
+
+    fig, ax = plt.subplots(figsize=(1280*PX, 720*PX))
+
+    # plot cdf curve
+    color = (0, 0, 0)
+    ax.bar(u_vector, cdf_vector)
+    ax.tick_params(axis='y', labelcolor=color)
+
+    # plot limits
+    plt.axhline(y = rated, ls = ':', lw = '1.5', color = 'red', alpha = 0.5)
+    plt.axhline(y = cut_out, ls = ':', lw = '1.5', color = 'red', alpha = 0.5)
+
+    plt.xlim(min(u_vector)-1, max(u_vector)+1)
+    plt.ylim(-0.05, 1.05)
+
+    # axis labels
+    fig.suptitle(f'Wind resources Cummulative distribution function', fontsize = FONT_SIZE + 2)
+    ax.set_xlabel('Wind speed [m/s]', fontsize = FONT_SIZE)
+    # ax.set_ylabel('Value [%]', fontsize = FONT_SIZE)
+
+    # change tick font size
+    ax.tick_params(axis='both', which='major', labelsize=FONT_SIZE)
+    
+    # layout
+    plt.grid(alpha=0.25)
+    fig.tight_layout()
+
+    # export as png
+    plt.savefig(os.path.join(figures_dir, 'wind_cdf.svg'))
+    plt.show()
 
 def plot_turbine_curve(u_vector, power_vector, limits):
     ''' 
@@ -89,7 +128,7 @@ def plot_turbine_curve(u_vector, power_vector, limits):
     # highlight X value
     for label in ax.get_xticklabels():
         try:
-            tick_value = float(label.get_text())  # Convert label text to number
+            tick_value = float(label._x)  # Convert label text to number
             if tick_value in limits:
                 label.set_color('red')  # Change color
                 label.set_fontweight('bold')  # Optional: Make it bold
@@ -123,18 +162,23 @@ def plot_turbine_curve(u_vector, power_vector, limits):
     # chart formatting
     ax.get_yaxis().set_major_formatter(
         plt_tick.FuncFormatter(lambda x, p: format(int(x)/1000, ',.0f')))
+    ax.get_xaxis().set_major_formatter(
+        plt_tick.FuncFormatter(lambda x, p: format(x, '.0f')))
 
     # axis labels
     fig.suptitle(f'Turbine power curve', fontsize = FONT_SIZE + 2)
     ax.set_xlabel('Wind speed [m/s]', fontsize = FONT_SIZE)
     ax.set_ylabel('Power [kW]', fontsize = FONT_SIZE)
+
+    # change tick font size
+    ax.tick_params(axis='both', which='major', labelsize=FONT_SIZE)
     
     # layout
     plt.grid(alpha=0.25)
     fig.tight_layout()
 
     # export as png
-    plt.savefig(os.path.join(figures_dir, 'turbine_power_curve.png'))
+    plt.savefig(os.path.join(figures_dir, 'turbine_power_curve.svg'))
     plt.show()
     
 
@@ -152,7 +196,7 @@ def plot_turbine_energy_production(u_vector, turbine_energy_vector, wind_energy_
     color = 'tab:brown'
     ax.plot(u_vector, wind_energy_vector, color=color, label='Available wind energy at turbine area', marker='.')
 
-    fig.legend(loc='upper right', bbox_to_anchor=(0.9, 0.85))
+    fig.legend(loc='upper right', bbox_to_anchor=(0.45, 0.85), prop={'size': FONT_SIZE})
 
     # chart formatting
     ax.get_yaxis().set_major_formatter(
@@ -161,8 +205,11 @@ def plot_turbine_energy_production(u_vector, turbine_energy_vector, wind_energy_
     fig.suptitle(f'Turbine energy production and available wind energy', fontsize = FONT_SIZE + 2)
     ax.set_xlabel('Wind speed [m/s]', fontsize = FONT_SIZE)
 
+    # change tick font size
+    ax.tick_params(axis='both', which='major', labelsize=FONT_SIZE)
+
     plt.grid(alpha=0.25)
     fig.tight_layout()
 
-    plt.savefig(os.path.join(figures_dir, 'energy_production.png'))
+    plt.savefig(os.path.join(figures_dir, 'energy_production.svg'))
     plt.show()
