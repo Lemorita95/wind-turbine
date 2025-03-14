@@ -172,7 +172,7 @@ class Turbine():
         calculate average power for each wind speed
         '''
         self.average_power_vector = [e / t if t != 0 else 0 for (e, t) in zip(self.energy_vector, self.hourly_distribution_vector)]
-        self.average_power_value = self.average_power_vector[self.speed_rated]
+        self.average_power_value = self.energy_production / sum(self.hourly_distribution_vector)
 
 
     def full_load_hours(self):

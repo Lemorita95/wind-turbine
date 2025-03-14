@@ -11,7 +11,7 @@ One year energy production: 12084.55 MWh
 
 Full-load hours: 3126.77 Hours
 
-Turbine average power: 3632.97 kW
+Turbine average power: 1379.94 kW
 
 Tower thickness due to gravity load: 0.66 mm
 Tower thickness due to aerodinamic load: 40.83 mm
